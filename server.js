@@ -2,7 +2,9 @@ const express = require("express");
 const connectDB = require("./config/db");
 const path = require('path')
 const app = express();
+const config = require("config");
 
+const Prompts = require("./models/Prompts")
 //connect DB
 connectDB();
 
@@ -11,7 +13,18 @@ app.use(express.json({extended:false}))
 
 
 
-app.get("/", (req, res) => res.json({ msg: `welcome to contact-keeper API` }));
+app.get("/", (req, res) => res.json({ msg: `Welcome to WriteInspyre` }));
+
+app.get("/all", async (req, res) => {
+  try {
+    //req.user is accessible through the auth middleware      //sorts prompts by most recent date.
+    const prompts = await Prompts.find()
+    res.json(prompts);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("server error");
+  }
+});
 
 
 
@@ -19,7 +32,7 @@ app.get("/", (req, res) => res.json({ msg: `welcome to contact-keeper API` }));
 
 //routes
 app.use("/api/users", require("./routes/users"));
-app.use("/api/contacts", require("./routes/contacts"));
+app.use("/api/prompts", require("./routes/prompts"));
 app.use("/api/auth", require("./routes/auth"));
 
 
