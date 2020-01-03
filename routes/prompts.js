@@ -76,7 +76,7 @@ router.post(
         title,
         response,
         //user id from auth middleware
-        user: req.user.id
+        user: req.user._id
       });
       const prompt = await newPrompt.save();
 

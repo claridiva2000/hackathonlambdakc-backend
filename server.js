@@ -1,36 +1,19 @@
-const express = require('express');
-const cors = require('cors')
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-
+const express = require("express");
+const connectDB = require("./config/db");
+// const path = require('path')
 const app = express();
-
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors())
-
-//routes
-app.use("/api/users", require("./routes/users"));
-app.use("/api/prompts", require("./routes/prompts"));
-app.use("/api/auth", require("./routes/auth"));
-
-
-
-// const dotenv = require('dotenv');
+const cors = require('cors')
 const config = require("config");
 
-// dotenv.config();
-const connectDB = require("./config/db");
-
+const Prompts = require("./models/Prompts")
 //connect DB
 connectDB();
 
 //init Middleware
-app.use(express.json())
+app.use(express.json({extended:false}))
+app.use(cors())
 
 
-
-const Prompts = require("./models/Prompts")
 app.get("/", (req, res) => res.json({ msg: `Welcome to WriteInspyre` }));
 
 app.get("/all", async (req, res) => {
@@ -44,6 +27,14 @@ app.get("/all", async (req, res) => {
   }
 });
 
+
+
+
+
+//routes
+app.use("/api/users", require("./routes/users"));
+app.use("/api/prompts", require("./routes/prompts"));
+app.use("/api/auth", require("./routes/auth"));
 
 
 // //serve static assetts in production
